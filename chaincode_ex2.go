@@ -87,7 +87,7 @@ func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []
 // ============================================================================================================================
 // Query - read a variable from chaincode state - (aka read)
 // ============================================================================================================================
-func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string) ([]byte, error) {
+func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	if function != "query" {
 		return nil, errors.New("Invalid query function name. Expecting \"query\"")
 	}

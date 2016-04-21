@@ -1,112 +1,70 @@
-/*
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
-*/
-
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
 
-	"github.com/openblockchain/obc-peer/openchain/chaincode/shim"
+	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
-// ============================================================================================================================
-// Init - reset all the things
-// ============================================================================================================================
-func (t *SimpleChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+// SimpleChaincode example simple Chaincode implementation
+type SimpleChaincode struct {
+}
 
-	var Aval int
+var A, B string
+var Aval, Bval, X int
+
+// Init callback representing the invocation of a chaincode
+// This chaincode will manage two accounts A and B and will transfer X units from A to B upon invoke
+func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	var err error
-	fmt.Println("init is called") //error
-	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 1")
+
+	if len(args) != 4 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 4")
 	}
 
 	// Initialize the chaincode
-	Aval, err = strconv.Atoi(args[0])
-	fmt.Println("Avalvalue " + Aval)
+	A = args[0]
+	Aval, err = strconv.Atoi(args[1])
 	if err != nil {
 		return nil, errors.New("Expecting integer value for asset holding")
 	}
-
-	// Write the state to the ledger
-
-	err = stub.PutState("abc", []byte(strconv.Itoa(Aval))) //making a test var "abc", I find it handy to read/write to it right away to test the network
-	fmt.Println("err abc " + err)
+	B = args[2]
+	Bval, err = strconv.Atoi(args[3])
 	if err != nil {
-		return nil, err
+		return nil, errors.New("Expecting integer value for asset holding")
 	}
+	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
 
-	var index = "user"
-	jsonAsBytes, _ := json.Marshal("shubham") //marshal an emtpy array of strings to clear the index
-	err = stub.PutState(index, jsonAsBytes)
-	fmt.Println("err index " + err)
-	if err != nil {
-		return nil, err
-	}
-
+	/************
+			// Write the state to the ledger
+			err = stub.PutState(A, []byte(strconv.Itoa(Aval))
+			if err != nil {
+				return nil, err
+			}
+			stub.PutState(B, []byte(strconv.Itoa(Bval))
+			err = stub.PutState(B, []byte(strconv.Itoa(Bval))
+			if err != nil {
+				return nil, err
+			}
+	************/
 	return nil, nil
 }
 
-// ============================================================================================================================
-// Run - Our entry point
-// ============================================================================================================================
-func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
-	fmt.Println("run is running " + function)
-
-	// Handle different functions
-	if function == "init" { //initialize the chaincode state, used as reset
-		return t.init(stub, args)
-	} else if function == "init_variable" { //create a new marble
-		res, err := t.init_variable(stub, args)
-		return res, err
-	}
-	fmt.Println("run did not find func: " + function) //error
-
-	return nil, errors.New("Received unknown function invocation")
+func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+	// Transaction makes payment of X units from A to B
+	var err error
+	X, err = strconv.Atoi(args[0])
+	Aval = Aval - X
+	Bval = Bval + X
+	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
+	return nil, err
 }
 
-// ============================================================================================================================
-// Query - read a variable from chaincode state - (aka read)
-// ============================================================================================================================
+// Query callback representing the query of a chaincode
 func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
-	if function != "query" {
-		return nil, errors.New("Invalid query function name. Expecting \"query\"")
-	}
-	fmt.Println("inside query function")
-	var name, jsonResp string
-	var err error
-
-	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting name of the person to query")
-	}
-
-	name = "user"
-	valAsbytes, err := stub.GetState(user) //get the var from chaincode state
-	if err != nil {
-		jsonResp = "{\"Error\":\"Failed to get state for " + name + "\"}"
-		return nil, errors.New(jsonResp)
-	}
-
-	return valAsbytes, nil //send it onward
+	return nil, nil
 }
 
 func main() {
@@ -114,17 +72,4 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error starting Simple chaincode: %s", err)
 	}
-
-}
-
-// Init Marble - create a new marble, store into chaincode state
-// ============================================================================================================================
-func (t *SimpleChaincode) init_variable(stub *shim.ChaincodeStub, args string) ([]byte, error) {
-	var err error
-
-	err = stub.PutState("user", []byte(args)) //store marble with id as key
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
 }

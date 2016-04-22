@@ -64,9 +64,8 @@ func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []
 		return t.Write(stub, args)
 	} else if function == "init_currentuser" { //create a new marble
 		return t.init_currentuser(stub, args)
-	} else if function == "get_currentuser" { //change owner of a marble
-		return t.get_currentuser(stub)
 	}
+
 	fmt.Println("run did not find func: " + function) //error
 
 	return nil, errors.New("Received unknown function invocation")

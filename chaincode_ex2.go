@@ -86,6 +86,11 @@ func (t *SimpleChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byt
 func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 
 	fmt.Println("query is called")
+	if(function =="get_currentuser")
+	{
+		return t.get_currentuser(stub)
+	}
+
 	return nil, nil //send it onward
 }
 

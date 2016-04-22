@@ -115,7 +115,7 @@ func (t *SimpleChaincode) init_currentuser(stub *shim.ChaincodeStub, args []stri
 	var err error
 
 	user := strings.ToLower(args[0])
-
+	fmt.Println("putting: "+user);
 	err = stub.PutState("currentuser", []byte(user)) //store marble with id as key
 	if err != nil {
 		return nil, err
@@ -136,5 +136,5 @@ func (t *SimpleChaincode) get_currentuser(stub *shim.ChaincodeStub) ([]byte, err
 	var username string
 	json.Unmarshal(currentuserbytes, &username) //un stringify it aka JSON.parse()
 	fmt.Println("current user: "+username)
-	return currentuserbytes,err
+	return currentuserbytes,err;
 }

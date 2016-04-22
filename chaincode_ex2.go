@@ -90,7 +90,7 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 		}
 	var err error
 	fmt.Println("get current user is called")
-	currentuserbytes, err := stub.GetState("currentuser")
+	currentuserbytes, err := stub.GetState(args[0])
 	if err != nil {
 		return nil, errors.New("Failed to get thing")
 	}

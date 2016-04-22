@@ -85,8 +85,19 @@ func (t *SimpleChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byt
 // ============================================================================================================================
 func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 
-
-	return nil, nil
+	if function != "query" {
+			return nil, errors.New("Invalid query function name. Expecting \"query\"")
+		}
+	var err error
+	fmt.Println("get current user is called")
+	currentuserbytes, err := stub.GetState(args[0])
+	if err != nil {
+		return nil, errors.New("Failed to get thing")
+	}
+	var username string
+	json.Unmarshal(currentuserbytes, &username) //un stringify it aka JSON.parse()
+	fmt.Println("current user: "+username)
+	return currentuserbytes,err;
 
 
 }

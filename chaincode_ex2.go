@@ -136,5 +136,5 @@ func (t *SimpleChaincode) get_currentuser(stub *shim.ChaincodeStub) ([]byte, err
 	var username string
 	json.Unmarshal(currentuserbytes, &username) //un stringify it aka JSON.parse()
 	fmt.Println("current user: "+username)
-	return currentuserbytes,err
+	return currentuserbytes,errsa
 }

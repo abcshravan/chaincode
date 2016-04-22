@@ -65,7 +65,7 @@ func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []
 	} else if function == "init_currentuser" { //create a new marble
 		return t.init_currentuser(stub, args)
 	} else if function == "get_currentuser" { //change owner of a marble
-		return t.set_user(stub, args)
+		return t.get_currentuser(stub)
 	}
 	fmt.Println("run did not find func: " + function) //error
 
@@ -134,7 +134,7 @@ func (t *SimpleChaincode) get_currentuser(stub *shim.ChaincodeStub) ([]byte, err
 		return nil, errors.New("Failed to get thing")
 	}
 	var username string
-	json.Unmarshal(marbleAsBytes, &username) //un stringify it aka JSON.parse()
+	json.Unmarshal(currentuserbytes, &username) //un stringify it aka JSON.parse()
 	fmt.Println("current user: "+username)
-	return username
+	return currentuserbytes,err
 }

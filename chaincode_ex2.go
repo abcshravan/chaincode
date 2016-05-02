@@ -243,9 +243,6 @@ func (t *SimpleChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte
 // Init Marble - create a new marble, store into chaincode state
 // ============================================================================================================================
 func (t *SimpleChaincode) init_marble(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-
-
-	fmt.Println("init marble is running ")
 	var err error
 
 	//   0       1       2     3

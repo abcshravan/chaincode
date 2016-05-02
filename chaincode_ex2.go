@@ -279,6 +279,7 @@ func (t *SimpleChaincode) init_marble(stub *shim.ChaincodeStub, args []string) (
 		return nil, err
 	}
 
+	fmt.Println("uuid in chaincode = "+stub.UUID);
 	//get the marble index
 	marblesAsBytes, err := stub.GetState(marbleIndexStr)
 	if err != nil {

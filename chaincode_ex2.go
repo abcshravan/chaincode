@@ -243,6 +243,9 @@ func (t *SimpleChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte
 // Init Marble - create a new marble, store into chaincode state
 // ============================================================================================================================
 func (t *SimpleChaincode) init_marble(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+
+
+	fmt.Println("init marble is running ")
 	var err error
 
 	//   0       1       2     3
@@ -279,7 +282,6 @@ func (t *SimpleChaincode) init_marble(stub *shim.ChaincodeStub, args []string) (
 		return nil, err
 	}
 
-	fmt.Println("uuid in chaincode")
 	//get the marble index
 	marblesAsBytes, err := stub.GetState(marbleIndexStr)
 	if err != nil {

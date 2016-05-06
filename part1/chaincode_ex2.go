@@ -39,7 +39,7 @@ func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []
         return t.Init(stub, "init", args)
     } else if function == "write" {
         return t.write(stub, args)
-    }else if function=="set_user" {
+    }else if function== "set_user" {
   			return t.set_user(stub, args)
 		}
 

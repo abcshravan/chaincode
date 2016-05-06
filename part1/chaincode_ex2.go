@@ -31,7 +31,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 
     return nil, nil
 }
-func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
     fmt.Println("invoke is running " + function)
 
     // Handle different functions
